@@ -1,15 +1,24 @@
 package org.learn.dptl.model;
 
+import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Random;
 import java.util.Set;
 
 public abstract class Draft {
 
+    private LocalDate drawingDate;
     private Set<Integer> whiteBalls;
     private int powerBall;
+    private Random rand;
 
-//    public Draft() {
-//    }
+    public Draft(LocalDate drawingDate) {
+        whiteBalls = new HashSet<>();
+        while(whiteBalls.size() < 6) whiteBalls.add(rand.nextInt(70));
+        powerBall = rand.nextInt(1,28);
+        this.drawingDate = drawingDate;
+    }
 
     public Draft(Set<Integer> whiteBalls, int powerBall) {
         this.whiteBalls = whiteBalls;
@@ -20,7 +29,7 @@ public abstract class Draft {
         return whiteBalls;
     }
 
-    public void setWhiteBalls(Set<Integer> whiteBalls) {
+    private void setWhiteBalls(Set<Integer> whiteBalls) {
         this.whiteBalls = whiteBalls;
     }
 
