@@ -1,47 +1,72 @@
 package org.learn.dptl.ui;
 
+import org.learn.dptl.model.Match;
+import org.learn.dptl.model.Ticket;
+
 import java.util.Scanner;
 
 public class GameController {
 
-    /*
-     * Don't Play the Lottery
-     * Console based app
-     * Age
-     * Life Expectancy
-     * $/drawing ($2 / ticket)
-
-     * 3 drawings/week
-     * Quick Pick
-     * Stretch Goals
-     * Power Play
-     * Favorite Numbers instead of / in addition to Quick Pick
-     * Configuration change for Mega Millions
-     * Web Interface
-     */
+    private static Scanner console = new Scanner(System.in);
 
     public void run() {
-        Scanner console = new Scanner(System.in);
-        String name = readRequiredString("What is your name?");
         int age = readRequiredInt("What is your age?", 18, Integer.MAX_VALUE);
-        int years = readRequiredInt("How many years do you intend to play the lottery?", 1, Integer.MAX_VALUE);
-        int playsPerWeek = readRequiredInt("How many times will you play each week?", 1, 3);
-        int tickets = readRequiredInt("How many tickets do you want each lottery (tickets are $2)?", 1, 75);
+        int years = readRequiredInt("What is your life expectancy?", 1, Integer.MAX_VALUE);
+        int lotteriesPerWeek = readRequiredInt("There are 3 lotteries each week, how many of them do you plan to play?", 1, 3);
+        int ticketsPerLottery = readRequiredInt("How many tickets do you want to play each lottery (tickets are $2)?", 1, 75);
 
-        int totalLotteries = calculateTotalPlays(age, years, playsPerWeek);
+        int totalSpent = 0;
+        int totalWon = 0;
 
+        int totalLotteries = calculateTotalLotteries(age, years, lotteriesPerWeek);
+        for (int lottery = 0; lottery < totalLotteries; lottery++) {
+            totalSpent += 2;
+            totalWon += calculateWinningsForOneLottery(ticketsPerLottery);
+        }
 
+        System.out.printf("\nYou spent $%d and won $%d for a total of $%d%n",
+                totalSpent, totalWon, totalWon - totalSpent);
     }
 
-    private int calculateTotalPlays(int age, int years, int playsPerWeek) {
-        return -1;
+    private int calculateWinningsForOneLottery(int ticketsPerLottery) {
+        int winnings = 0;
+        Ticket winningTicket = new Ticket();
+        for (int ticket = 0; ticket < ticketsPerLottery; ticket++) {
+            Ticket myTicket = new Ticket();
+            Match match = Match.calculatePrizeMoney(winningTicket, myTicket);
+            winnings += match.getPrizeMoney();
+        }
+        return winnings;
+    }
+
+    private int calculateTotalLotteries(int age, int lifeExpectancy, int playsPerWeek) {
+        int years = lifeExpectancy - age;
+        return years * 52 * playsPerWeek;
     }
 
     private int readRequiredInt(String prompt, int min, int max) {
-        return -1;
+        Integer num = null;
+        do {
+            String input = readRequiredString(prompt);
+            try {
+                num = Integer.parseInt(input.trim());
+            } catch (NumberFormatException e) {
+            }
+
+        } while (num == null || num < min || num > max);
+
+        return num;
     }
 
     private String readRequiredString(String prompt) {
-        return null;
+
+        String input;
+        do {
+            System.out.print(prompt);
+            input = console.nextLine();
+        } while (input == null || input.isBlank());
+
+        return input;
+
     }
 }

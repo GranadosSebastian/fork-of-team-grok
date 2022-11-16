@@ -1,4 +1,4 @@
-import org.learn.dptl.ui.GameController.GameController;
+import org.learn.dptl.ui.GameController;
 
 public class App {
     public static void main(String[] args) {

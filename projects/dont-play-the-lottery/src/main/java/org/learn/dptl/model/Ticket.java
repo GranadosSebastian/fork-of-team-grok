@@ -6,27 +6,35 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 
-public abstract class Draft {
+public class Ticket {
 
-    private LocalDate drawingDate;
     private Set<Integer> whiteBalls;
     private int powerBall;
-    private Random rand;
+    private static final Random RANDOM = new Random();
 
-    public Draft(LocalDate drawingDate) {
+    /**
+     * Constructor for generating random number
+     */
+    public Ticket() {
         whiteBalls = new HashSet<>();
-        while(whiteBalls.size() < 6) whiteBalls.add(rand.nextInt(70));
-        powerBall = rand.nextInt(1,28);
-        this.drawingDate = drawingDate;
+        while(whiteBalls.size() < 6) {
+            whiteBalls.add(RANDOM.nextInt(70));
+        }
+        powerBall = RANDOM.nextInt(1,27);
     }
 
-    public Draft(Set<Integer> whiteBalls, int powerBall) {
+    /**
+     * Constructor for non-quickpick option (player-specific)
+     * @param whiteBalls - Whiteball numbers picked by the player
+     * @param powerBall - Powerball number picked by the player
+     */
+    public Ticket(Set<Integer> whiteBalls, int powerBall) {
         this.whiteBalls = whiteBalls;
         this.powerBall = powerBall;
     }
 
     public Set<Integer> getWhiteBalls() {
-        return whiteBalls;
+        return new HashSet<>(whiteBalls);
     }
 
     private void setWhiteBalls(Set<Integer> whiteBalls) {
@@ -45,7 +53,7 @@ public abstract class Draft {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Draft draft = (Draft) o;
+        Ticket draft = (Ticket) o;
         return powerBall == draft.powerBall && Objects.equals(whiteBalls, draft.whiteBalls);
     }
 
